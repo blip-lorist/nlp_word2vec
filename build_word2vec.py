@@ -22,8 +22,12 @@ def build_word2vec(vocabulary_size):
             name = "word_embedding")
 
 
-    # Weights and biases and NCE Loss
+    # Weights and biases and Noise Contrastive Estimation (NCE) Loss
     # Note: truncated normal drops anything beyond two standard devs from the mean
+    # Noise Contrastive Estimation (NCE) seeks to bypass summation over the entire corpus
+    # Additional reading: https://www.quora.com/What-is-Noise-Contrastive-estimation-NCE
+    # and http://proceedings.mlr.press/v9/gutmann10a/gutmann10a.pdf
+
     nce_weights = tf.Variable(tf.truncated_normal([vocabulary_size, embedding_size],
         stddev = tf.sqrt(1/embedding_size), name = "nce_weights"))
 
@@ -33,7 +37,7 @@ def build_word2vec(vocabulary_size):
 
     train_labels = tf.reshape(y, [tf.shape(y)[0], 1])
 
-    # Computer loss
+    # Compute loss
     loss = tf.reduce_mean(tf.nn.nce_loss(weights = nce_weights,
                                          biases = nce_biases,
                                          labels = train_labels,
