@@ -3,7 +3,12 @@ import numpy as np
 import pandas as pd
 import tflearn
 from sklearn.model_selection import train_test_split
-import time
+
+# Snagged this regex cleaning script from @nateraw
+import data_helper
+
+from build_word2vec import build_word2vec
+
 
 """
 Output:
@@ -14,9 +19,6 @@ Output:
     Example: [0.0, 1.0, 3.0, 4.0] should not include the pivot of 2
 """
 
-# Snagged this regex cleaning script from @nateraw
-import data_helper
-
 # Read JSON data to data frames
 data_frame_clothing = pd.read_json("reviews_Clothing_Shoes_and_Jewelry_5.json", lines = True)
 data_frame_sports = pd.read_json("reviews_Sports_and_Outdoors_5.json", lines = True)
@@ -24,7 +26,7 @@ data_frame_sports = pd.read_json("reviews_Sports_and_Outdoors_5.json", lines = T
 data_frame = pd.concat([data_frame_clothing, data_frame_sports])
 
 # Reduce size temporarily while iterating
-# data_frame = data_frame[:1000]
+data_frame = data_frame[:1000]
 
 # Retreive text from the data frame
 review_text = data_frame["reviewText"].values
@@ -91,7 +93,4 @@ for sentence in range(sentence_count):
             target_words.append(targets[target])
 
 
-import pdb; pdb.set_trace()
-
-
-
+optimizer, loss, x, y, sess = build_word2vec(vocabulary_size)
