@@ -1,11 +1,13 @@
 import tensorflow as tf
 
 def build_word2vec(vocabulary_size):
-    # Pivot Worlds
+    # Pivot words
     x = tf.placeholder(tf.int32, shape=[None,], name="x_pivot_idxs")
 
     # Target words
     y = tf.placeholder(tf.int32, shape=[None,], name="y_target_idxs")
+
+    # TODO: don't forget to feed the placeholders!
 
     embedding_size = 128
     num_samples = 64
@@ -16,12 +18,12 @@ def build_word2vec(vocabulary_size):
     # https://developers.google.com/machine-learning/crash-course/embeddings/video-lecture
     # generate an embedding that is vocab size by embedding size,
     # using reals with a min value of -1 and max value of 1
-
     Embedding = tf.Variable(tf.random_uniform([vocabulary_size, embedding_size], -1.0, 1.0),
             name = "word_embedding")
 
 
     # Weights and biases and NCE Loss
+    # Note: truncated normal drops anything beyond two standard devs from the mean
     nce_weights = tf.Variable(tf.truncated_normal([vocabulary_size, embedding_size],
         stddev = tf.sqrt(1/embedding_size), name = "nce_weights"))
 
